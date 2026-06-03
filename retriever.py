@@ -68,5 +68,26 @@ def retrieve(query, n_results=N_RESULTS):
     if _collection.count() == 0:
         return []
 
-    # Your implementation here.
-    return []
+    results = _collection.query(
+        query_texts=[query],
+        n_results=n_results,
+        include=["documents", "metadatas", "distances"],
+    )
+
+    # query() returns one inner list per query string. We only passed a single
+    # query, so the actual results for it live at index [0] of each field.
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
+    distances = results["distances"][0]
+
+    chunks = []
+    for text, metadata, distance in zip(documents, metadatas, distances):
+        chunks.append({
+            "text": text,
+            "game": metadata["game"],
+            "distance": distance,
+        })
+
+    # ChromaDB already orders results closest-first, so the list is sorted by
+    # relevance (lowest distance first).
+    return chunks

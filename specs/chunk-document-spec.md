@@ -116,11 +116,23 @@ handle these cases better, at the cost of more implementation complexity.
 **Actual chunk count produced across all 8 rule books:**
 
 ```
-[your answer here]
+149 chunks total. Per game:
+  Catan: 18    Clue: 21    Codenames: 16    Monopoly: 23
+  Pandemic: 18  Risk: 20    Ticket to Ride: 16  Uno: 17
+
+The spread tracks document length, not "rule count" — Monopoly's longer
+rules summary produces the most chunks, the shorter ones (Codenames,
+Ticket to Ride) the fewest.
 ```
 
 **One thing that surprised you or didn't match your expectations:**
 
 ```
-[your answer here]
+How often chunks start or end mid-sentence/mid-word. Because the window is
+purely character-based and ignores sentence boundaries, a printed chunk
+often opens like "x, that hex produces no resources that turn..." — the
+front of the sentence lives in the previous chunk. The 50-char overlap
+keeps the full rule recoverable across the boundary, but no single chunk is
+as clean as the idealized examples. It still retrieves the right game, just
+with higher distance scores than a sentence-aware splitter would give.
 ```
